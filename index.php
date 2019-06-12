@@ -19,6 +19,10 @@
 		
 		<?php
 		$diretorio = "envios";
+		if (!is_dir($diretorio))
+		{
+			mkdir($diretorio);
+		}
 		$dir_completo = $diretorio.DIRECTORY_SEPARATOR;
 
 		//array contendo as extenções
