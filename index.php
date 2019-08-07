@@ -13,6 +13,7 @@
 			<div class="controle_envio">
 				<label for="imagem">Clique para selecionar o arquivo</label>
 				<input type="file" name="arquivo" id="imagem">
+				<input type="text" name="name" placeholder="Digite, caso deseje alterar o nome" title="Digite um novo nome, caso deseje alterar o original">
 				<input type="submit" name="salvar" value="Salvar">
 			</div>
 		</form>
@@ -21,7 +22,7 @@
 		$diretorio = "envios";
 		if (!is_dir($diretorio))
 		{
-			mkdir($diretorio);
+			mkdir($diretorio,0777);
 		}
 		$dir_completo = $diretorio.DIRECTORY_SEPARATOR;
 
@@ -48,7 +49,16 @@
 			if (!empty($_FILES["arquivo"]["name"]))
 			{
 				$temporario = $_FILES["arquivo"]["tmp_name"];
-				$nome = $dir_completo . $_FILES["arquivo"]["name"];
+				$qtd_caracter = strlen($_FILES["arquivo"]["type"]);
+				$extension_file = substr($_FILES["arquivo"]["type"],6,$qtd_caracter);
+				if (empty($_POST["name"]))
+				{
+					$nome = $dir_completo . $_FILES["arquivo"]["name"];
+				}
+				else
+				{
+					$nome = $dir_completo . $_POST["name"].".".$extension_file;
+				}
 
 				move_uploaded_file($temporario, $nome);
 				if (file_exists($nome))
@@ -59,17 +69,20 @@
 			}
 		}
 		?>
-	<hr>
+	
 	<?php
 	$conteudo_diretorio = scandir($diretorio);
 	$posicao = 0;
+	$count_content = count($conteudo_diretorio) - 2;
+	echo "<span class='enviado' data-count_content='" . $count_content . "'>" . $count_content . " Arquivos na pasta</span>";
+	echo "<hr>";
 	foreach ($conteudo_diretorio as $conteudo)
 	{
 		if (!in_array($conteudo, array(".","..")))
 		{
 			echo "<div class='controle' onclick='abrir($posicao)'>";
 				echo "<div class='acao'>";
-					echo "<button class='acao_btn baixar'><a href='".$dir_completo.$conteudo."' id='foto' target='_blank'>Baixar</a></button>";
+					echo "<a href='".$dir_completo.$conteudo."' class='acao_btn baixar' target='_blank'>Baixar</a>";
 					echo "<button class='acao_btn excluir' onclick='excluir($posicao)'>Excluir</button>";
 				echo "</div>";
 				$info = pathinfo($dir_completo.$conteudo);
@@ -91,7 +104,9 @@
 				}
 				else
 				{
-					echo "<img src='".$dir_completo.$conteudo."' class='arquivo_com_imagem'>";
+					//echo "<img src='".$dir_completo.$conteudo."' class='arquivo_com_imagem'>";
+					echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."padrao.png' class='arquivo_sem_imagem'>";
+					chmod($dir_completo.$conteudo, 0777);
 				}
 				echo "<hr>";
 				echo "<span class='legenda_foto'>".$info["basename"]."</span>";

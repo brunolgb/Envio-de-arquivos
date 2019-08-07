@@ -39,3 +39,29 @@ function excluir (posicao)
 	};
 	requisicao.send();
 }
+const heightScrenn = screen.height;
+const widthScrenn = screen.width;
+window.addEventListener("load", function(){
+	document.querySelector("title").innerHTML += " - "+document.querySelector("[data-count_content]")["attributes"]["data-count_content"]["nodeValue"] + " Arquivos";
+	
+	if (heightScrenn < widthScrenn)
+	{
+		setInterval(function(){
+			const element_count = document.querySelector("[data-count_content]");
+			const value_element_count = element_count["attributes"]["data-count_content"]["nodeValue"];
+
+			var requisicao = new XMLHttpRequest();
+			requisicao.open("GET","refresh_content.php", true);
+			requisicao.onreadystatechange = function(){
+				var retorno = requisicao.responseText;
+				if (value_element_count < retorno)
+				{
+					window.location.reload();
+				}
+			}
+			requisicao.send();
+		}, 500);
+		
+	}
+
+});
