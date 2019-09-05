@@ -6,14 +6,13 @@ if (!empty($acao))
 	switch ($acao)
 	{
 		case 'excluir':
-			unlink($arquivo);
-			if (!file_exists($arquivo))
+			if(unlink("envios/".$arquivo))
 			{
 				echo "Excluido com sucesso";
 			}
 			else
 			{
-				echo "O arquivo ainda existe";
+				echo "Arquivo não foi excluido";
 			}
 			break;
 	}

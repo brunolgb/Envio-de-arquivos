@@ -3,7 +3,6 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="estilo.css">
-	<script src='js.js'></script>
 	<title>Eventos</title>
 </head>
 <body>
@@ -11,9 +10,22 @@
 		<h2 style="font-family: Sawasdee">Envio de arquivos</h2>
 		<form method="post" enctype="multipart/form-data">
 			<div class="controle_envio">
-				<label for="imagem">Clique para selecionar o arquivo</label>
-				<input type="file" name="arquivo" id="imagem">
-				<input type="text" name="name" placeholder="Digite, caso deseje alterar o nome" title="Digite um novo nome, caso deseje alterar o original">
+				<label for="imagem" class="label_input_image" onmouse>Clique para selecionar o arquivo</label>
+				<input type="hidden" name='MAX_FILE_SIZE' value='300000000'>
+				<input type="file" name="arquivo[]" id="imagem" multiple='multiple'>
+				<input type="text" name="name" placeholder="Digite, caso deseje alterar o nome" title="Digite um novo nome, caso deseje alterar o original" list="list_content_dir">
+				<datalist style="display: none" id="list_content_dir">
+					<?php
+					$conteudo_diretorio = scandir("envios");
+					foreach ($conteudo_diretorio as $content)
+					{
+						if (!in_array($content, array(".","..")))
+						{
+							echo "<option value='$content'></option>";
+						}
+					}
+					?>
+				</datalist>
 				<input type="submit" name="salvar" value="Salvar">
 			</div>
 		</form>
@@ -26,46 +38,52 @@
 		}
 		$dir_completo = $diretorio.DIRECTORY_SEPARATOR;
 
-		//array contendo as extenções
-		$extencao = array(
-			"png",
-			"jpeg",
-			"jpg",
-			"gif",
-			"svg"
-		);
-		$ext_musica = array(
-			"mp3"
-		);
-		$ext_video = array(
-			"mp4",
-			"mov"
+		$extensao_file = array(
+			"ation/pdf" => ".pdf",
+			"image/png" => ".png",
+			"image/jpeg" => ".jpeg",
+			"image/jpg" => ".jpg",
+			"image/gif" => ".gif",
+			"application/vnd.oasis.opendocument.text" => ".odt",
+			"application/vnd.oasis.opendocument.spreadsheet" => ".ods",
+			"image/svg+xml" => ".svg",
+			"application/x-blender" => ".blend"
 		);
 
+		function envio($temp,$nome)
+		{
+			$diretorio = "envios" . DIRECTORY_SEPARATOR;
+			move_uploaded_file($temp, $diretorio . $nome);
+			if(is_uploaded_file($temp))
+			{
+				return "<span class='enviado'>enviado</span>";;
+			}
+			if (file_exists($diretorio . $nome))
+			{
+				// return true;
+				// return "<span class='enviado'>enviado</span>";
+			}	
+		}
 
 		if (isset($_POST["salvar"]))
 		{
-			//trbalhar a imagem
-			if (!empty($_FILES["arquivo"]["name"]))
+			define("nomes",$_FILES["arquivo"]["name"]);
+			define("temporarios",$_FILES["arquivo"]["tmp_name"]);
+			define("tipos",$_FILES["arquivo"]["type"]);
+			
+			for ($i=0; $i < count($_FILES["arquivo"]["name"]); $i++)
 			{
-				$temporario = $_FILES["arquivo"]["tmp_name"];
-				$qtd_caracter = strlen($_FILES["arquivo"]["type"]);
-				$extension_file = substr($_FILES["arquivo"]["type"],6,$qtd_caracter);
-				if (empty($_POST["name"]))
+				$nome = $_POST["name"].$extensao_file[tipos[$i]];
+
+				if(empty($_POST["name"]))
 				{
-					$nome = $dir_completo . $_FILES["arquivo"]["name"];
+					echo envio(temporarios[$i],nomes[$i]);
 				}
 				else
 				{
-					$nome = $dir_completo . $_POST["name"].".".$extension_file;
+					echo envio(temporarios[$i],$nome);
 				}
 
-				move_uploaded_file($temporario, $nome);
-				if (file_exists($nome))
-				{
-					echo "<span class='enviado'>enviado</span>";
-				}
-				
 			}
 		}
 		?>
@@ -74,8 +92,9 @@
 	$conteudo_diretorio = scandir($diretorio);
 	$posicao = 0;
 	$count_content = count($conteudo_diretorio) - 2;
-	echo "<span class='enviado' data-count_content='" . $count_content . "'>" . $count_content . " Arquivos na pasta</span>";
+	echo "<span data-count_content='" . $count_content . "'>" . $count_content . " Arquivos na pasta</span>";
 	echo "<hr>";
+	echo "<div class='control_box_files'>";
 	foreach ($conteudo_diretorio as $conteudo)
 	{
 		if (!in_array($conteudo, array(".","..")))
@@ -104,8 +123,8 @@
 				}
 				else
 				{
-					//echo "<img src='".$dir_completo.$conteudo."' class='arquivo_com_imagem'>";
-					echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."padrao.png' class='arquivo_sem_imagem'>";
+					echo "<img src='".$dir_completo.$conteudo."' class='arquivo_com_imagem'>";
+					// echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."padrao.png' class='arquivo_sem_imagem'>";
 					chmod($dir_completo.$conteudo, 0777);
 				}
 				echo "<hr>";
@@ -115,7 +134,9 @@
 			$posicao++;
 		}
 	}
+	echo "</div>";
 	?>
 	</div>
+	<script src='js.js'></script>
 </body>
 </html>

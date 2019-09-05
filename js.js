@@ -18,10 +18,12 @@ function abrir (posicao)
 }
 function excluir (posicao)
 {
-	var el = document.querySelectorAll("#foto")[posicao];
-	var nome = el.getAttribute("href");
+	var el = document.querySelectorAll(".legenda_foto")[posicao];
+	console.log(el);
+	var nome = el.innerHTML;
 	var requisicao = new XMLHttpRequest();
 	requisicao.open("GET","acao.php?acao=excluir&arquivo="+nome,true);
+	requisicao.send(null);
 	requisicao.onreadystatechange = function(){
 		var retorno = requisicao.responseText;
 		if (retorno.length != 0)
@@ -37,7 +39,6 @@ function excluir (posicao)
 			
 		}
 	};
-	requisicao.send();
 }
 const heightScrenn = screen.height;
 const widthScrenn = screen.width;
@@ -64,4 +65,19 @@ window.addEventListener("load", function(){
 		
 	}
 
+});
+
+const input_image = document.querySelector("#imagem");
+input_image.addEventListener("change", function(){
+	const label_input_image = document.querySelector(".label_input_image");
+	if (input_image.value == "")
+	{
+		label_input_image.innerHTML = "Clique para selecionar o arquivo";
+		label_input_image.classList.remove("selection_input");
+	}
+	else
+	{
+		label_input_image.innerHTML = "Arquivo selecionado";
+		label_input_image.classList.add("selection_input");
+	}
 });
