@@ -34,7 +34,7 @@
 		$diretorio = "envios";
 		if (!is_dir($diretorio))
 		{
-			mkdir($diretorio,0777);
+			mkdir($diretorio,0755);
 		}
 		$dir_completo = $diretorio.DIRECTORY_SEPARATOR;
 
@@ -125,7 +125,6 @@
 				{
 					echo "<img src='".$dir_completo.$conteudo."' class='arquivo_com_imagem'>";
 					// echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."padrao.png' class='arquivo_sem_imagem'>";
-					chmod($dir_completo.$conteudo, 0777);
 				}
 				echo "<hr>";
 				echo "<span class='legenda_foto'>".$info["basename"]."</span>";
