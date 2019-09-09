@@ -2,7 +2,6 @@
 $acao = $_GET["acao"];
 $arquivo = $_GET["arquivo"];
 $filename = "envios" . DIRECTORY_SEPARATOR . $arquivo;
-echo $filename;
 if (!empty($acao))
 {
 	switch ($acao)

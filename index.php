@@ -86,9 +86,7 @@
 
 			}
 		}
-		?>
-	
-	<?php
+
 	$conteudo_diretorio = scandir($diretorio);
 	$posicao = 0;
 	$count_content = count($conteudo_diretorio) - 2;
@@ -99,33 +97,32 @@
 	{
 		if (!in_array($conteudo, array(".","..")))
 		{
+			$diretorio_completo = $dir_completo . $conteudo;
 			echo "<div class='controle' onclick='abrir($posicao)'>";
 				echo "<div class='acao'>";
 					echo "<a href='".$dir_completo.$conteudo."' class='acao_btn baixar' target='_blank'>Baixar</a>";
 					echo "<button class='acao_btn excluir' onclick='excluir($posicao)'>Excluir</button>";
 				echo "</div>";
-				$info = pathinfo($dir_completo.$conteudo);
-				//var_dump($info);
-				if (!in_array($info["extension"], $extencao))
+				$info = pathinfo($diretorio_completo);
+				if($info["extension"] == "mp4")
 				{
-					if (in_array($info["extension"], $ext_musica))
-					{
-						echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."mp3.png' class='arquivo_sem_imagem'>";
-					}
-					elseif(in_array($info["extension"], $ext_video))
-					{
-						echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."mp4.png' class='arquivo_sem_imagem'>";
-					}
-					else
-					{
-						echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."padrao.png' class='arquivo_sem_imagem'>";
-					}
+					echo "<video controls class='arquivo_com_imagem' preload='none'>";
+					echo "<source src='" . $diretorio_completo . "'>";
+					echo "</video>";
 				}
-				else
+				else if($info["extension"] == "mp3")
 				{
-					echo "<img src='".$dir_completo.$conteudo."' class='arquivo_com_imagem'>";
-					// echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."padrao.png' class='arquivo_sem_imagem'>";
+					echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."mp3.png' class='arquivo_sem_imagem'>";
 				}
+				else if(!in_array($info["extension"],array("jpef, jpg, png, gif, svg")))
+				{
+					echo "<img src='".$diretorio_completo."' class='arquivo_com_imagem'>";
+				}
+				else {
+					echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."padrao.png' class='arquivo_sem_imagem'>";
+				}
+
+
 				echo "<hr>";
 				echo "<span class='legenda_foto'>".$info["basename"]."</span>";
 			
