@@ -100,7 +100,7 @@
 			$diretorio_completo = $dir_completo . $conteudo;
 			echo "<div class='controle' onclick='abrir($posicao)'>";
 				echo "<div class='acao'>";
-					echo "<a href='".$dir_completo.$conteudo."' class='acao_btn baixar' target='_blank'>Baixar</a>";
+					echo "<a href='".$dir_completo.$conteudo."' class='acao_btn baixar' target='_blank' download>Baixar</a>";
 					echo "<button class='acao_btn excluir' onclick='excluir($posicao)'>Excluir</button>";
 				echo "</div>";
 				$info = pathinfo($diretorio_completo);
@@ -125,7 +125,7 @@
 
 				echo "<hr>";
 				$name_file = strlen($info["basename"]) > 20 ? substr($info["basename"], 0 , 20) . " ..." : $info["basename"];
-				echo "<span class='legenda_foto'>".$name_file."</span>";
+				echo "<span class='legenda_foto' file-path='" . $info["basename"] . "'>".$name_file."</span>";
 			
 			echo "</div>";
 			$posicao++;

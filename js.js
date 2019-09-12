@@ -19,8 +19,7 @@ function abrir (posicao)
 function excluir (posicao)
 {
 	var el = document.querySelectorAll(".legenda_foto")[posicao];
-	console.log(el);
-	var nome = el.innerHTML;
+	var nome = el.getAttribute("file-path");
 	var requisicao = new XMLHttpRequest();
 	requisicao.open("GET","acao.php?acao=excluir&arquivo="+nome,true);
 	requisicao.send(null);
