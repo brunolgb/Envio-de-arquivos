@@ -128,6 +128,7 @@ img{
 	position: absolute;;
 	top: 0px;
 	left: 0px;
+	z-index: 9999;
 	background: rgba(0,0,0,0.7);
 	transition: opacity 0.4s;
 }
@@ -225,4 +226,7 @@ img{
 		line-height: 50px;
 		padding: 0px 15px;
 	}
+}
+video{
+z-index: 0;
 }
