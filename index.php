@@ -124,7 +124,7 @@
 
 
 				echo "<hr>";
-				$name_file = strlen($info["basename"]) > 20 ? substr($info["basename"], 0 , 20) . "..." : $info["basename"];
+				$name_file = strlen($info["basename"]) > 20 ? substr($info["basename"], 0 , 20) . " ..." : $info["basename"];
 				echo "<span class='legenda_foto'>".$name_file."</span>";
 			
 			echo "</div>";
