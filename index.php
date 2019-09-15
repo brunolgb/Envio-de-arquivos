@@ -104,6 +104,7 @@
 					echo "<button class='acao_btn excluir' onclick='excluir($posicao)'>Excluir</button>";
 				echo "</div>";
 				$info = pathinfo($diretorio_completo);
+
 				if($info["extension"] == "mp4")
 				{
 					echo "<video controls class='arquivo_com_imagem' preload='none'>";
@@ -112,9 +113,11 @@
 				}
 				else if($info["extension"] == "mp3")
 				{
-					echo "<img src='imagens_padrao".DIRECTORY_SEPARATOR."mp3.png' class='arquivo_sem_imagem'>";
+					echo "<audio controls class='arquivo_com_imagem' preload='none'>";
+					echo "<source src='" . $diretorio_completo . "'>";
+					echo "</audio>";
 				}
-				else if(!in_array($info["extension"],array("jpef, jpg, png, gif, svg")))
+				else if(in_array($info["extension"],array("jpef", "jpg", "png", "gif", "svg")))
 				{
 					echo "<img src='".$diretorio_completo."' class='arquivo_com_imagem'>";
 				}
